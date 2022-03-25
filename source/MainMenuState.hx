@@ -57,6 +57,7 @@ class MainMenuState extends MusicBeatState
 	public var backButton:FlxClickableSprite;
 	public var fallBackBG:FlxSprite;
 	public var bg:FlxSprite;
+	public var scale:Int = 2;
 	public var mouseControls:Bool = true;
 
 	public var factor(get, never):Float;
@@ -71,37 +72,29 @@ class MainMenuState extends MusicBeatState
 		
 		optionShit.add('story mode', function() {
 			FlxG.switchState(new StoryMenuState());
-		}, Paths.getSparrowAtlas('FNF_main_menu_assets'), 'story mode basic', 'story mode white');
+		}, Paths.getSparrowAtlas('FNF_main_menu_assets'), 'story mode basic', 'story mode white',0,50);
+
 		optionShit.add('freeplay', function() {
 			FlxG.switchState(new FreeplayState());
-		}, Paths.getSparrowAtlas('FNF_main_menu_assets'), 'freeplay basic', 'freeplay white');
-		optionShit.add('mods', function() {
-			FlxG.switchState(new ModMenuState());
-		}, Paths.getSparrowAtlas('FNF_main_menu_assets'), 'mods basic', 'mods white');
-		optionShit.add('donate', function() {
-			#if linux
-				Sys.command('/usr/bin/xdg-open', ["https://ninja-muffin24.itch.io/funkin", "&"]);
-			#else
-				FlxG.openURL('https://ninja-muffin24.itch.io/funkin');
-			#end
-		}, Paths.getSparrowAtlas('FNF_main_menu_assets'), 'donate basic', 'donate white').direct = true;
+		}, Paths.getSparrowAtlas('FNF_main_menu_assets'), 'freeplay basic', 'freeplay white',0,170);
+
 		optionShit.add('credits', function() {
 			FlxG.switchState(new CreditsState());
-		}, Paths.getSparrowAtlas('FNF_main_menu_assets'), 'credits basic', 'credits white');
+		}, Paths.getSparrowAtlas('FNF_main_menu_assets'), 'credits basic', 'credits white',0,300 + 100);
+
 		optionShit.add('options', function() {
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
 			OptionsMenu.fromFreeplay = false;
 			// smooth af transition
 			FlxG.switchState(new OptionsMenu(0, -FlxG.camera.scroll.y * 0.18));
-		}, Paths.getSparrowAtlas('FNF_main_menu_assets'), 'options basic', 'options white');
+		}, Paths.getSparrowAtlas('FNF_main_menu_assets'), 'options basic', 'options white',0,410 + 100);
 
         // persistentUpdate = false;
-		if (Settings.engineSettings.data.developerMode) {
-			optionShit.insert(4, 'toolbox', function() {
-				FlxG.switchState(new ToolboxMain());
-			}, Paths.getSparrowAtlas('FNF_main_menu_assets'), 'toolbox basic', 'toolbox white');
-		}
+		#if debug
+		if (FlxG.keys.justPressed.F1)
+		FlxG.switchState(new ToolboxMain());
+		#end
 		if (Settings.engineSettings.data.memoryOptimization) {
 			Paths.clearModCache();
 		}
@@ -165,7 +158,6 @@ class MainMenuState extends MusicBeatState
 		bg.screenCenter();
 		bg.antialiasing = true;
 		add(bg);
-		
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
@@ -190,19 +182,22 @@ class MainMenuState extends MusicBeatState
 		for (i=>option in optionShit.members)
 		{
 			// var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 160));
-			var menuItem:FlxSprite = new FlxSprite(0, (FlxG.height / optionShit.length * i) + (FlxG.height / (optionShit.length * 2)));
+			// (FlxG.height / optionShit.length * i) + (FlxG.height / (optionShit.length * 2))
+			var menuItem:FlxSprite = new FlxSprite(0,0);
 			menuItem.frames = option.frames;
 			menuItem.animation.addByPrefix('idle', option.idle, option.idleFPS == null ? 24 : option.idleFPS);
 			menuItem.animation.addByPrefix('selected', option.selected, option.selectedFPS == null ? 24 : option.selectedFPS);
 			menuItem.animation.play('idle');
+//			menuItem.scale.x =  scale;
+//			menuItem.scale.y = scale;
 			menuItem.updateHitbox();
 			menuItem.ID = i;
-			menuItem.screenCenter(X);
 			menuItem.scrollFactor.set(0, 1 / (optionShit.length));
 			menuItem.setGraphicSize(Std.int(factor / menuItem.height * menuItem.width), Std.int(factor));
-			menuItem.y -= menuItem.height / 2;
+			menuItem.y = option.y;
 			menuItem.antialiasing = true;
 			menuItems.add(menuItem);
+			trace(option.y);
 		}
 
 		FlxG.camera.follow(camFollow, null, 0.06);
@@ -321,7 +316,7 @@ class MainMenuState extends MusicBeatState
 
 		menuItems.forEach(function(spr:FlxSprite)
 		{
-			spr.screenCenter(X);
+
 		});
 		mainMenuScript.executeFunc("postUpdate", [elapsed]);
 		mainMenuScript.executeFunc("updatePost", [elapsed]);
