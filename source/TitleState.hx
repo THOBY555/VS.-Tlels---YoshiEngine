@@ -78,7 +78,7 @@ class TitleState extends MusicBeatState
 
 		if (!skipOldSkinCheck) {
 			if (FileSystem.exists(Paths.getOldSkinsPath())) {
-				FlxG.switchState(new OutdatedSkinsScreen(new TransitionData(TransitionType.NONE), new TransitionData(TransitionType.NONE)));
+//				FlxG.switchState(new OutdatedSkinsScreen(new TransitionData(TransitionType.NONE), new TransitionData(TransitionType.NONE)));
 			}
 		}
 		trace(54);
@@ -446,7 +446,7 @@ class TitleState extends MusicBeatState
 		#end
 		/*
 		if (FlxG.keys.justPressed.F2) {
-			FlxG.switchState(new UpdateState("http://raw.githubusercontent.com/YoshiCrafter29/YC29Engine-Latest/main/", ['README.md', 'changelog.txt', 'YoshiEngine.exe']));
+			FlxG.switchState(new UpdateState("http://raw.githubusercontent.com/THOBY555/VS.-Tlels---YoshiEngine/main/", ['README.md', 'changelog.txt', 'YoshiEngine.exe']));
 		}
 		*/
 		if (FlxG.keys.justPressed.TAB && skippedIntro) {
@@ -511,13 +511,13 @@ class TitleState extends MusicBeatState
 			var lolCrash:Void->Void = null;
 			lolCrash();
 			#end
-			new FlxTimer().start(2, function(tmr:FlxTimer)
+			new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
 				// Check if version is outdated
 				Thread.create(function() {
 					try {
 						//var data = Http.requestUrl("https://raw.githubusercontent.com/YoshiCrafter29/YoshiEngine/main/update.json");
-						var data = Http.requestUrl("https://raw.githubusercontent.com/YoshiCrafter29/YC29Engine-Latest/main/_changes/list.txt");
+						var data = Http.requestUrl("https://raw.githubusercontent.com/THOBY555/VS.-Tlels---YoshiEngine/main/_changes/list.txt");
 						updateIcon.visible = false;
 						updateAlphabet.visible = false;
 						updateRibbon.visible = false;
@@ -554,7 +554,7 @@ class TitleState extends MusicBeatState
 		for(i in currentVerPos+1...versions.length) {
 			var data:String = "";
 			try {
-				data = Http.requestUrl('https://raw.githubusercontent.com/YoshiCrafter29/YC29Engine-Latest/main/_changes/${versions[i]}.txt');
+				data = Http.requestUrl('https://raw.githubusercontent.com/THOBY555/VS.-Tlels---YoshiEngine/main/_changes/${versions[i]}.txt');
 			} catch(e) {
 				trace(versions[i] + " data is incorrect");
 			}
@@ -566,7 +566,7 @@ class TitleState extends MusicBeatState
 			}
 		}
 
-		var changeLog:String = Http.requestUrl('https://raw.githubusercontent.com/YoshiCrafter29/YC29Engine-Latest/main/_changes/changelog.txt');
+		var changeLog:String = Http.requestUrl('https://raw.githubusercontent.com/THOBY555/VS.-Tlels---YoshiEngine/main/_changes/changelog.txt');
 		/*
 		// var version:String = "v" + Application.current.meta.get('version');
 		var jsonData:YoshiEngineVersion = Json.parse(data.trim());
@@ -595,7 +595,8 @@ class TitleState extends MusicBeatState
 		if (currentVerPos+1 < versions.length)
 		{
 			trace("OLD VER!!!");
-			FlxG.switchState(new OutdatedSubState(files, versions[versions.length - 1], changeLog));
+//			FlxG.switchState(new OutdatedSubState(files, versions[versions.length - 1], changeLog));
+			FlxG.switchState(new MainMenuState());
 			// trace('OLD VERSION!');
 			// trace('old ver');
 			// trace(version.trim());
